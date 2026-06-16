@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UPSKILL — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0A0F1E; --navy-mid: #111829; --navy-card: #141C2F;
+    --indigo: #5B4FFF; --indigo-light: #7B72FF; --cyan: #00E5C8;
+    --white: #F0EEF8; --slate: #8A8FAB; --border: rgba(255,255,255,0.07);
+  }
+  body { background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif; line-height: 1.6; }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px; border-bottom: 1px solid var(--border);
+    background: rgba(10,15,30,0.85); position: sticky; top: 0; backdrop-filter: blur(18px);
+  }
+  .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+  .logo span { color: var(--cyan); }
+  .user-info { display: flex; align-items: center; gap: 16px; font-size: 14px; color: var(--slate); }
+  .logout-btn {
+    background: var(--indigo); color: var(--white); border: none;
+    padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer;
+  }
+  .logout-btn:hover { background: var(--indigo-light); }
+  main { padding: 40px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-family: 'Syne', sans-serif; font-size: 32px; margin-bottom: 8px; }
+  .subtitle { color: var(--slate); margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .card h3 { font-family: 'Syne', sans-serif; font-size: 18px; margin-bottom: 8px; }
+  .card p { color: var(--slate); font-size: 14px; margin-bottom: 12px; }
+  .card .status { font-size: 13px; color: var(--cyan); }
+  .card input[type=file] { font-size: 13px; color: var(--slate); }
+  .btn {
+    background: var(--indigo); color: var(--white); border: none;
+    padding: 10px 18px; border-radius: 8px; font-weight: 600;
+    cursor: pointer; font-size: 14px; margin-top: 8px;
+  }
+  .btn:hover { background: var(--indigo-light); }
+  .loading { text-align: center; padding: 80px; color: var(--slate); }
+  .milestone { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .milestone:last-child { border-bottom: none; }
+  .chat-box { max-height: 240px; overflow-y: auto; margin-bottom: 12px; }
+  .chat-msg { padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
+  .chat-msg.user { background: rgba(91,79,255,0.15); text-align: right; }
+  .chat-msg.assistant { background: rgba(0,229,200,0.08); }
+  .chat-input-row { display: flex; gap: 8px; }
+  .chat-input-row input {
+    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px; color: var(--white); font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">UP<span>SKILL</span></div>
+  <div class="user-info">
+    <span id="welcome-text">Loading…</span>
+    <button class="logout-btn" onclick="Auth.logout()">Log Out</button>
+  </div>
+</header>
+
+<main>
+  <div id="loading" class="loading">Loading your dashboard…</div>
+
+  <div id="dashboard-content" style="display:none;">
+    <h1 id="dash-title">Welcome back</h1>
+    <p class="subtitle">Your personalised career data, restored automatically.</p>
+
+    <div class="grid">
+
+      <!-- Resume Upload -->
+      <div class="card">
+        <h3>Resume Upload</h3>
+        <p id="resume-status">No resume uploaded yet.</p>
+        <input type="file" id="resume-file" accept=".pdf,.txt" />
+        <br/>
+        <button class="btn" onclick="uploadResume()">Upload & Analyse</button>
+      </div>
+
+      <!-- Skill Gap Analysis -->
+      <div class="card">
+        <h3>Skill Gap Analysis</h3>
+        <p id="skills-status">Upload a resume to see your skill gaps.</p>
+        <div id="skills-list"></div>
+      </div>
+
+      <!-- Personalized Roadmap -->
+      <div class="card">
+        <h3>Personalized Roadmap</h3>
+        <p id="roadmap-status">No roadmap yet.</p>
+        <div id="roadmap-milestones"></div>
+        <button class="btn" onclick="generateRoadmap()">Generate Sample Roadmap</button>
+      </div>
+
+      <!-- YouTube Learning Recommendations -->
+      <div class="card">
+        <h3>YouTube Learning Recommendations</h3>
+        <p>Based on your skill gaps, here are suggested topics:</p>
+        <div id="youtube-recs">—</div>
+      </div>
+
+      <!-- AI Career Chat -->
+      <div class="card" style="grid-column: span 2;">
+        <h3>AI Career Chat</h3>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Ask your AI mentor..." />
+          <button class="btn" onclick="sendChatMessage()">Send</button>
+        </div>
+      </div>
+
+      <!-- Mock Interviews -->
+      <div class="card">
+        <h3>Mock Interviews</h3>
+        <p id="interview-status">No mock interviews yet.</p>
+        <div id="interview-history"></div>
+        <button class="btn" onclick="startMockInterview()">Start Mock Interview</button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+  let dashboardData = null;
+
+  // ── On load: verify session, then load ALL user data in one call ──
+  window.addEventListener('load', async () => {
+    const user = await Auth.restoreSession();
+    if (!user) return; // restoreSession already redirected
+
+    document.getElementById('welcome-text').textContent = `Hi, ${user.name}`;
+    document.getElementById('dash-title').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+
+    await loadDashboard();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('dashboard-content').style.display = 'block';
+  });
+
+  async function loadDashboard() {
+    const res = await Auth.authFetch('/dashboard');
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.message || 'Failed to load dashboard.');
+      return;
+    }
+    dashboardData = data;
+    renderResume(data.resume);
+    renderRoadmap(data.roadmap);
+    renderChat(data.chatHistory);
+    renderInterviews(data.mockInterviews);
+  }
+
+  // ── Resume + Skill Gap ──
+  function renderResume(resume) {
+    const status = document.getElementById('resume-status');
+    const skillsStatus = document.getElementById('skills-status');
+    const skillsList = document.getElementById('skills-list');
+    const youtubeRecs = document.getElementById('youtube-recs');
+
+    if (!resume) {
+      status.textContent = 'No resume uploaded yet.';
+      return;
+    }
+    status.textContent = `✓ ${resume.fileName || 'Resume'} (uploaded ${new Date(resume.createdAt).toLocaleDateString()})`;
+
+    if (resume.skillGaps && resume.skillGaps.length) {
+      skillsStatus.textContent = 'Identified skill gaps:';
+      skillsList.innerHTML = resume.skillGaps.map(s => `<span class="status">• ${s}</span><br/>`).join('');
+      youtubeRecs.innerHTML = resume.skillGaps.map(s =>
+        `<a href="https://www.youtube.com/results?search_query=${encodeURIComponent('learn ' + s)}" target="_blank" style="color:var(--cyan); display:block; margin-bottom:6px;">▶ Learn ${s}</a>`
+      ).join('');
+    }
+  }
+
+  async function uploadResume() {
+    const fileInput = document.getElementById('resume-file');
+    if (!fileInput.files.length) { alert('Choose a file first.'); return; }
+    const file = fileInput.files[0];
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      // Mock parsing — in production, send to a parsing/AI service
+      const mockSkills = ['JavaScript', 'HTML/CSS', 'Communication'];
+      const mockGaps = ['React', 'SQL', 'Data Structures'];
+
+      const res = await Auth.authFetch('/resume', {
+        method: 'POST',
+        body: JSON.stringify({
+          fileName: file.name,
+          fileData: reader.result,
+          parsedText: '(extracted text would go here)',
+          skills: mockSkills,
+          skillGaps: mockGaps,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        renderResume(data.resume);
+      } else {
+        alert(data.message || 'Upload failed.');
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Roadmap ──
+  function renderRoadmap(roadmap) {
+    const status = document.getElementById('roadmap-status');
+    const list = document.getElementById('roadmap-milestones');
+
+    if (!roadmap) {
+      status.textContent = 'No roadmap yet.';
+      list.innerHTML = '';
+      return;
+    }
+    status.textContent = `Target role: ${roadmap.targetRole || 'Not set'}`;
+    list.innerHTML = roadmap.milestones.map((m, i) =>
+      `<div class="milestone">
+        <input type="checkbox" ${m.completed ? 'checked' : ''} onchange="toggleMilestone(${i}, this.checked)" />
+        <span>${m.title}</span>
+      </div>`
+    ).join('');
+  }
+
+  async function generateRoadmap() {
+    const res = await Auth.authFetch('/roadmap', {
+      method: 'POST',
+      body: JSON.stringify({
+        targetRole: 'Frontend Developer',
+        milestones: [
+          { title: 'Master JavaScript fundamentals', completed: false },
+          { title: 'Learn React', completed: false },
+          { title: 'Build 3 portfolio projects', completed: false },
+          { title: 'Practice mock interviews', completed: false },
+        ],
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) renderRoadmap(data.roadmap);
+  }
+
+  async function toggleMilestone(index, completed) {
+    await Auth.authFetch(`/roadmap/milestones/${index}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ completed }),
+    });
+  }
+
+  // ── AI Career Chat ──
+  function renderChat(history) {
+    const box = document.getElementById('chat-box');
+    box.innerHTML = history.map(m =>
+      `<div class="chat-msg ${m.role}">${escapeHtml(m.content)}</div>`
+    ).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    await Auth.authFetch('/chat', { method: 'POST', body: JSON.stringify({ role: 'user', content: text }) });
+
+    // Mock AI reply — replace with real AI integration
+    const reply = `Thanks for sharing that. Based on your roadmap, I'd suggest focusing on practical projects next.`;
+    await Auth.authFetch('/chat', { method: 'POST', body: JSON.stringify({ role: 'assistant', content: reply }) });
+
+    const res = await Auth.authFetch('/chat');
+    const data = await res.json();
+    renderChat(data.messages);
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ── Mock Interviews ──
+  function renderInterviews(interviews) {
+    const status = document.getElementById('interview-status');
+    const history = document.getElementById('interview-history');
+
+    if (!interviews.length) {
+      status.textContent = 'No mock interviews yet.';
+      history.innerHTML = '';
+      return;
+    }
+    status.textContent = `${interviews.length} session(s) completed.`;
+    history.innerHTML = interviews.map(i =>
+      `<div class="milestone"><span>${i.role || 'General'} — Score: ${i.overallScore ?? 'N/A'}</span></div>`
+    ).join('');
+  }
+
+  async function startMockInterview() {
+    const res = await Auth.authFetch('/mock-interviews', {
+      method: 'POST',
+      body: JSON.stringify({
+        role: 'Frontend Developer',
+        questions: [
+          { question: 'Tell me about yourself.', answer: '', feedback: '', score: 0 },
+        ],
+        overallScore: Math.floor(60 + Math.random() * 40),
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      const dashRes = await Auth.authFetch('/mock-interviews');
+      const dashData = await dashRes.json();
+      renderInterviews(dashData.interviews);
+    }
+  }
+</script>
+</body>
+</html>

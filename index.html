@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="UPSKILL is an AI-powered career mentor that analyses your resume, detects skill gaps, builds a personalised learning roadmap, and connects you with jobs and government schemes — all in one place."/>
+<meta name="theme-color" content="#0A0F1E"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%235B4FFF'/%3E%3Cstop offset='100%25' stop-color='%2300E5C8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='%230A0F1E'/%3E%3Cpath d='M30 65 L30 35 L45 50 L60 35 L60 65 L70 65 L70 30 L58 30 L45 43 L32 30 L20 30 L20 65 Z' fill='url(%23g)'/%3E%3C/svg%3E"/>
+<title>UPSKILL — AI Career Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0A0F1E;
+    --navy-mid: #111829;
+    --navy-card: #141C2F;
+    --indigo: #5B4FFF;
+    --indigo-light: #7B72FF;
+    --cyan: #00E5C8;
+    --cyan-dim: rgba(0,229,200,0.12);
+    --white: #F0EEF8;
+    --slate: #8A8FAB;
+    --slate-dim: rgba(138,143,171,0.15);
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ───── NAV ───── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 60px;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--slate); text-decoration: none;
+    font-size: 14px; font-weight: 500; letter-spacing: 0.2px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--indigo); color: var(--white);
+    border: none; padding: 10px 24px; border-radius: 8px;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    text-decoration: none; display: inline-block;
+  }
+  .nav-cta:hover { background: var(--indigo-light); transform: translateY(-1px); }
+
+  /* Hamburger */
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; background: none; border: none; padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--white); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--navy-mid); border-bottom: 1px solid var(--border);
+    padding: 24px; z-index: 99; flex-direction: column; gap: 20px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--white); text-decoration: none;
+    font-size: 16px; font-weight: 500;
+  }
+  .mobile-menu .nav-cta { text-align: center; border-radius: 8px; }
+
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 60px;
+    padding: 120px 60px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(91,79,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -150px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,229,200,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--cyan-dim); border: 1px solid rgba(0,229,200,0.25);
+    border-radius: 100px; padding: 6px 14px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--cyan);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--indigo-light) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    color: var(--slate); font-size: 17px; font-weight: 400;
+    line-height: 1.7; max-width: 460px; margin-bottom: 40px;
+  }
+
+  .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--indigo); color: var(--white);
+    border: none; padding: 14px 32px; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 0 0 0 rgba(91,79,255,0.5);
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--indigo-light); transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(91,79,255,0.35);
+  }
+  .btn-ghost {
+    background: transparent; color: var(--slate);
+    border: 1px solid var(--border); padding: 14px 28px; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+  .hero-trust {
+    margin-top: 48px; display: flex; align-items: center; gap: 16px;
+  }
+  .trust-avatars { display: flex; }
+  .trust-avatars span {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--navy);
+    background: linear-gradient(135deg, var(--indigo) 0%, var(--cyan) 100%);
+    margin-left: -8px; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--white);
+  }
+  .trust-avatars span:first-child { margin-left: 0; }
+  .trust-text { font-size: 13px; color: var(--slate); }
+  .trust-text strong { color: var(--white); }
+
+  /* GPS RING */
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .gps-ring-wrap {
+    position: relative; width: 380px; height: 380px;
+  }
+  .gps-ring-wrap svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 40px rgba(91,79,255,0.3));
+  }
+  .gps-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .gps-score {
+    font-family: 'Syne', sans-serif; font-size: 72px;
+    font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, var(--indigo-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gps-label {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--slate); font-weight: 600; margin-top: 4px;
+  }
+
+  .gps-floats {
+    position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+    pointer-events: none;
+  }
+  .gps-float {
+    position: absolute; background: var(--navy-card);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 14px; font-size: 12px; font-weight: 500;
+    animation: floatCard 4s ease-in-out infinite;
+  }
+  .gps-float:nth-child(1) { top: 10%; right: -10%; animation-delay: 0s; }
+  .gps-float:nth-child(2) { bottom: 15%; left: -12%; animation-delay: 1.4s; }
+  .gps-float:nth-child(3) { top: 60%; right: -8%; animation-delay: 2.6s; }
+  .gps-float .fl-label { color: var(--slate); font-size: 10px; margin-bottom: 2px; }
+  .gps-float .fl-val { color: var(--cyan); font-weight: 700; font-size: 14px; }
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* STATS TICKER */
+  .ticker {
+    background: var(--navy-mid);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 18px 0; overflow: hidden;
+  }
+  .ticker-inner {
+    display: flex; gap: 80px;
+    animation: tickerMove 30s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--slate); flex-shrink: 0;
+  }
+  .ticker-item strong { color: var(--white); font-size: 15px; font-weight: 700; }
+  .ticker-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--indigo); flex-shrink: 0; }
+  @keyframes tickerMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ───── SECTION SHARED ───── */
+  .section-eyebrow {
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--indigo-light); font-weight: 700; margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(30px, 4vw, 48px); font-weight: 800;
+    letter-spacing: -1.5px; line-height: 1.1;
+    max-width: 600px; margin-bottom: 64px;
+  }
+  .section-title .grad { color: var(--cyan); }
+
+  /* ───── WHO IT'S FOR ───── */
+  .personas {
+    padding: 100px 60px;
+    background: var(--navy-mid);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .personas-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  }
+  .persona-card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 20px;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .persona-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--indigo), var(--cyan));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .persona-card:hover { border-color: rgba(91,79,255,0.35); transform: translateY(-4px); }
+  .persona-card:hover::after { transform: scaleX(1); }
+  .persona-emoji { font-size: 28px; margin-bottom: 16px; display: block; }
+  .persona-role {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .persona-age { font-size: 11px; color: var(--indigo-light); font-weight: 600;
+    letter-spacing: 0.5px; margin-bottom: 12px; }
+  .persona-pain { font-size: 12px; color: var(--slate); line-height: 1.6; }
+
+  /* ───── FEATURES ───── */
+  .features { padding: 100px 60px; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feat-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .feat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--indigo), transparent);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .feat-card:hover { border-color: rgba(91,79,255,0.35); transform: translateY(-3px); }
+  .feat-card:hover::before { opacity: 1; }
+  .feat-card.wide { grid-column: span 2; }
+
+  .feat-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--slate-dim); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; margin-bottom: 20px;
+  }
+  .feat-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 700; margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+  .feat-card p { color: var(--slate); font-size: 14px; line-height: 1.7; }
+  .feat-tag {
+    display: inline-block; margin-top: 16px;
+    background: var(--cyan-dim); border: 1px solid rgba(0,229,200,0.2);
+    color: var(--cyan); font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 4px 10px; border-radius: 4px;
+  }
+
+  /* ATS preview */
+  .ats-preview {
+    margin-top: 24px;
+    background: rgba(10,15,30,0.6);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px;
+  }
+  .ats-row { display: flex; align-items: center; margin-bottom: 10px; }
+  .ats-row:last-child { margin-bottom: 0; }
+  .ats-skill { font-size: 12px; color: var(--slate); width: 110px; flex-shrink: 0; }
+  .ats-bar-wrap { flex: 1; margin: 0 12px; background: rgba(255,255,255,0.07); border-radius: 3px; height: 5px; }
+  .ats-bar { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--indigo), var(--cyan)); }
+  .ats-pct { font-size: 11px; font-weight: 600; color: var(--white); width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* Roadmap preview inside feat-card */
+  .roadmap-preview {
+    margin-top: 20px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .roadmap-horizon {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(10,15,30,0.5); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+  }
+  .horizon-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+  }
+  .h1 { background: rgba(91,79,255,0.2); color: var(--indigo-light); }
+  .h2 { background: rgba(0,229,200,0.12); color: var(--cyan); }
+  .h3 { background: rgba(138,143,171,0.2); color: var(--slate); }
+  .roadmap-horizon span { font-size: 12px; color: var(--slate); }
+
+  /* ───── JOURNEY ───── */
+  .journey {
+    padding: 80px 60px 100px;
+    background: var(--navy-mid);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .journey-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; margin-top: 60px; position: relative;
+  }
+  .journey-steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--indigo), var(--cyan), var(--indigo), transparent);
+    opacity: 0.4;
+  }
+  .step {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: 0 16px; position: relative;
+  }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--navy-card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+    margin-bottom: 20px; position: relative; z-index: 1;
+    transition: all 0.25s;
+  }
+  .step:hover .step-num {
+    background: var(--indigo); border-color: var(--indigo);
+    box-shadow: 0 0 24px rgba(91,79,255,0.4);
+  }
+  .step h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; margin-bottom: 8px;
+  }
+  .step p { font-size: 12px; color: var(--slate); line-height: 1.6; }
+
+  /* ───── ROADMAP MILESTONES ───── */
+  .milestones { padding: 100px 60px; }
+  .milestones-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .milestone-card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: border-color 0.25s, transform 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .milestone-card:hover { border-color: rgba(91,79,255,0.35); transform: translateY(-3px); }
+  .milestone-num {
+    font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--indigo-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+  }
+  .milestone-period {
+    font-size: 11px; color: var(--indigo-light); font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .milestone-card h4 {
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    margin-bottom: 12px; letter-spacing: -0.3px;
+  }
+  .milestone-items { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .milestone-items li {
+    font-size: 12px; color: var(--slate); display: flex; align-items: flex-start; gap: 8px;
+  }
+  .milestone-items li::before {
+    content: '→'; color: var(--cyan); flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ───── METRICS ───── */
+  .metrics {
+    padding: 100px 60px;
+    background: var(--navy-mid);
+    border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .metrics-left .section-title { max-width: 420px; }
+  .metrics-list { margin-top: 32px; display: flex; flex-direction: column; gap: 20px; }
+  .metric-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px; border-radius: 10px;
+    background: var(--navy-card); border: 1px solid var(--border);
+  }
+  .metric-icon { font-size: 22px; flex-shrink: 0; }
+  .metric-text strong { font-size: 22px; font-family: 'Syne', sans-serif; font-weight: 800; color: var(--cyan); }
+  .metric-text span { font-size: 13px; color: var(--slate); display: block; margin-top: 2px; }
+
+  .metrics-right { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .m-card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .m-card:hover { border-color: rgba(91,79,255,0.3); }
+  .m-card .big {
+    font-family: 'Syne', sans-serif; font-size: 40px;
+    font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, var(--indigo-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .m-card .label { font-size: 13px; color: var(--slate); line-height: 1.5; }
+
+  /* ───── PRICING ───── */
+  .pricing { padding: 100px 60px; }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    max-width: 960px; margin: 0 auto;
+  }
+  .pricing-card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 36px;
+    position: relative; transition: border-color 0.25s, transform 0.2s;
+  }
+  .pricing-card:hover { border-color: rgba(91,79,255,0.35); transform: translateY(-4px); }
+  .pricing-card.featured {
+    border-color: rgba(91,79,255,0.5);
+    background: linear-gradient(160deg, #1A1F3A 0%, var(--navy-card) 100%);
+  }
+  .pricing-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--indigo); color: var(--white);
+    font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .pricing-name {
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    margin-bottom: 8px; letter-spacing: -0.3px;
+  }
+  .pricing-desc { font-size: 13px; color: var(--slate); margin-bottom: 24px; line-height: 1.5; }
+  .pricing-price {
+    font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800;
+    line-height: 1; margin-bottom: 4px;
+    background: linear-gradient(135deg, var(--indigo-light), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .pricing-period { font-size: 13px; color: var(--slate); margin-bottom: 28px; }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .pricing-features li {
+    font-size: 13px; color: var(--slate); display: flex; align-items: flex-start; gap: 10px;
+  }
+  .pricing-features li::before { content: '✓'; color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+  .pricing-features li.off { opacity: 0.4; }
+  .pricing-features li.off::before { content: '✕'; color: var(--slate); }
+  .pricing-cta {
+    width: 100%; padding: 13px 20px; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: none;
+  }
+  .pricing-cta.primary { background: var(--indigo); color: var(--white); }
+  .pricing-cta.primary:hover { background: var(--indigo-light); }
+  .pricing-cta.ghost { background: transparent; color: var(--slate); border: 1px solid var(--border); }
+  .pricing-cta.ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+  /* ───── CTA ───── */
+  .cta-section {
+    margin: 0 60px 100px;
+    background: linear-gradient(135deg, rgba(91,79,255,0.15) 0%, rgba(0,229,200,0.08) 100%);
+    border: 1px solid rgba(91,79,255,0.25);
+    border-radius: 24px; padding: 80px 60px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; top: -60%; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(91,79,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 {
+    font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 50px);
+    font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .cta-section p { color: var(--slate); font-size: 16px; margin-bottom: 36px; }
+  .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ───── FOOTER ───── */
+  footer {
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  footer p { color: var(--slate); font-size: 13px; }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { color: var(--slate); font-size: 13px; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ───── SCROLL REVEAL ───── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ───── RESPONSIVE ───── */
+  @media (max-width: 1100px) {
+    .personas-grid { grid-template-columns: repeat(3, 1fr); }
+    .milestones-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    .hero-visual { display: none; }
+    .personas { padding: 60px 24px; }
+    .personas-grid { grid-template-columns: 1fr 1fr; }
+    .features { padding: 60px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feat-card.wide { grid-column: span 1; }
+    .journey { padding: 60px 24px; }
+    .journey-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .journey-steps::before { display: none; }
+    .milestones { padding: 60px 24px; }
+    .milestones-grid { grid-template-columns: 1fr 1fr; }
+    .metrics { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .pricing { padding: 60px 24px; }
+    .cta-section { margin: 0 24px 60px; padding: 48px 28px; }
+    footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 560px) {
+    .personas-grid { grid-template-columns: 1fr; }
+    .milestones-grid { grid-template-columns: 1fr; }
+    .metrics-right { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#">UP<span>SKILL</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#journey">How it works</a></li>
+    <li><a href="#milestones">Roadmap</a></li>
+    <li><a href="#metrics">Results</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#" id="nav-login-link" onclick="document.getElementById('login-modal').style.display='flex'; return false;">Log In</a></li>
+    <li><a href="#" id="nav-dashboard-link" style="display:none;" href="/dashboard.html">Dashboard</a></li>
+  </ul>
+  <button class="nav-cta" id="nav-cta-btn" onclick="document.getElementById('signup-modal').style.display='flex'">Get Started Free</button>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" onclick="closeMobileMenu()">Features</a>
+  <a href="#journey" onclick="closeMobileMenu()">How it works</a>
+  <a href="#milestones" onclick="closeMobileMenu()">Roadmap</a>
+  <a href="#metrics" onclick="closeMobileMenu()">Results</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="#" onclick="closeMobileMenu(); document.getElementById('login-modal').style.display='flex'">Log In</a>
+  <a href="#" class="nav-cta" onclick="closeMobileMenu(); document.getElementById('signup-modal').style.display='flex'">Get Started Free</a>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI Career Intelligence Platform</div>
+    <h1>Your career,<br/><span class="grad">intelligently</span><br/>accelerated.</h1>
+    <p class="hero-sub">UPSKILL analyses your profile, detects skill gaps, builds a personalised learning roadmap, and connects you with jobs — all in one place.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('signup-modal').style.display='flex'">Analyse My Resume →</button>
+      <button class="btn-ghost" onclick="document.getElementById('demo-modal').style.display='flex'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Watch Demo
+      </button>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-avatars">
+        <span>RK</span><span>SA</span><span>PM</span><span>AJ</span><span>+</span>
+      </div>
+      <p class="trust-text"><strong>2,400+ students</strong> improved their career score this month</p>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="gps-ring-wrap">
+      <svg viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#5B4FFF"/>
+            <stop offset="100%" stop-color="#00E5C8"/>
+          </linearGradient>
+        </defs>
+        <circle cx="190" cy="190" r="175" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <circle cx="190" cy="190" r="155" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <circle cx="190" cy="190" r="138" stroke="rgba(255,255,255,0.06)" stroke-width="18" fill="none"/>
+        <circle cx="190" cy="190" r="138"
+          stroke="url(#ringGrad)"
+          stroke-width="18"
+          fill="none"
+          stroke-linecap="round"
+          stroke-dasharray="867.08"
+          stroke-dashoffset="867.08"
+          transform="rotate(-90 190 190)"
+          id="gpsArc"
+          style="transition: stroke-dashoffset 2s ease-out;"
+        />
+        <g stroke="rgba(255,255,255,0.12)" stroke-width="1">
+          <line x1="190" y1="16" x2="190" y2="32" transform="rotate(0 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(30 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(60 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="32" transform="rotate(90 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(120 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(150 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="32" transform="rotate(180 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(210 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(240 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="32" transform="rotate(270 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(300 190 190)"/>
+          <line x1="190" y1="16" x2="190" y2="26" transform="rotate(330 190 190)"/>
+        </g>
+        <circle cx="190" cy="52" r="8" fill="#00E5C8" opacity="0.8" transform="rotate(295.2 190 190)"/>
+      </svg>
+      <div class="gps-center">
+        <div class="gps-score" id="gpsNum">0</div>
+        <div class="gps-label">Career GPS</div>
+      </div>
+      <div class="gps-floats">
+        <div class="gps-float">
+          <div class="fl-label">ATS Score</div>
+          <div class="fl-val">↑ 78/100</div>
+        </div>
+        <div class="gps-float">
+          <div class="fl-label">Skill Match</div>
+          <div class="fl-val">91%</div>
+        </div>
+        <div class="gps-float">
+          <div class="fl-label">Interviews</div>
+          <div class="fl-val">12 done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>10,000+</strong> MAU target by Q3</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>40%</strong> placement rate within 6 months</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>≥ 70</strong> avg ATS score post-improvement</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>25%</strong> mock interview score boost per user</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>60%</strong> eligible users discovering govt schemes</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>55%</strong> 30-day retention rate</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>NPS 45+</strong> net promoter score target</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>50%</strong> complete first roadmap milestone in 30 days</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>10,000+</strong> MAU target by Q3</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>40%</strong> placement rate within 6 months</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>≥ 70</strong> avg ATS score post-improvement</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>25%</strong> mock interview score boost per user</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>60%</strong> eligible users discovering govt schemes</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>55%</strong> 30-day retention rate</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>NPS 45+</strong> net promoter score target</div>
+    <div class="ticker-item"><div class="ticker-dot"></div><strong>50%</strong> complete first roadmap milestone in 30 days</div>
+  </div>
+</div>
+
+<!-- ── WHO IT'S FOR ── -->
+<section class="personas reveal" id="personas">
+  <div style="padding: 0 60px 48px; max-width: none;">
+    <div class="section-eyebrow">Who it's for</div>
+    <h2 class="section-title">Built for every stage<br/>of your <span class="grad">career journey</span></h2>
+  </div>
+  <div class="personas-grid" style="padding: 0 60px;">
+    <div class="persona-card">
+      <span class="persona-emoji">🎓</span>
+      <div class="persona-role">College Student</div>
+      <div class="persona-age">18 – 22</div>
+      <p class="persona-pain">No guidance on where to start, weak resume, zero interview prep — UPSKILL builds your foundation from day one.</p>
+    </div>
+    <div class="persona-card">
+      <span class="persona-emoji">🚀</span>
+      <div class="persona-role">Fresh Graduate</div>
+      <div class="persona-age">22 – 26</div>
+      <p class="persona-pain">ATS rejections piling up, unclear skill gaps, limited network — UPSKILL helps you break through the screening wall.</p>
+    </div>
+    <div class="persona-card">
+      <span class="persona-emoji">🔄</span>
+      <div class="persona-role">Career Switcher</div>
+      <div class="persona-age">26 – 35</div>
+      <p class="persona-pain">Pivoting domains with no clear learning path — UPSKILL maps exactly what to learn and in what order.</p>
+    </div>
+    <div class="persona-card">
+      <span class="persona-emoji">🎯</span>
+      <div class="persona-role">Active Job Seeker</div>
+      <div class="persona-age">Any age</div>
+      <p class="persona-pain">Scattered tools, no structured plan — UPSKILL consolidates everything into one intelligent platform.</p>
+    </div>
+    <div class="persona-card">
+      <span class="persona-emoji">🌱</span>
+      <div class="persona-role">Rural / Low-Income</div>
+      <div class="persona-age">Any age</div>
+      <p class="persona-pain">Unaware of free resources and eligible government schemes — UPSKILL surfaces every opportunity you qualify for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features reveal" id="features">
+  <div class="section-eyebrow">Platform Features</div>
+  <h2 class="section-title">Everything your career<br/><span class="grad">actually needs</span></h2>
+
+  <div class="features-grid">
+    <!-- Wide: Resume -->
+    <div class="feat-card wide">
+      <div class="feat-icon">📄</div>
+      <h3>AI Resume Analyzer</h3>
+      <p>Upload your resume and get an ATS compatibility score, keyword gap detection, and a prioritised improvement report — in under 10 seconds.</p>
+      <div class="ats-preview">
+        <div class="ats-row">
+          <span class="ats-skill">React.js</span>
+          <div class="ats-bar-wrap"><div class="ats-bar" style="width:88%"></div></div>
+          <span class="ats-pct">88%</span>
+        </div>
+        <div class="ats-row">
+          <span class="ats-skill">System Design</span>
+          <div class="ats-bar-wrap"><div class="ats-bar" style="width:54%"></div></div>
+          <span class="ats-pct">54%</span>
+        </div>
+        <div class="ats-row">
+          <span class="ats-skill">Node.js</span>
+          <div class="ats-bar-wrap"><div class="ats-bar" style="width:72%"></div></div>
+          <span class="ats-pct">72%</span>
+        </div>
+        <div class="ats-row">
+          <span class="ats-skill">SQL</span>
+          <div class="ats-bar-wrap"><div class="ats-bar" style="width:40%"></div></div>
+          <span class="ats-pct">40%</span>
+        </div>
+      </div>
+      <span class="feat-tag">M1 · High Priority</span>
+    </div>
+
+    <!-- Career Readiness (was missing!) -->
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <h3>Career Readiness Assessment</h3>
+      <p>Get your Career Readiness, Employability, and Job Match scores. Detailed skill-gap analysis against your target role, plus alternate career paths ranked by market demand.</p>
+      <span class="feat-tag">M1 · Score-Based</span>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="feat-card">
+      <div class="feat-icon">💬</div>
+      <h3>AI Career Mentor</h3>
+      <p>A profile-aware chatbot that answers questions about your skills, resume, interviews, and job market — with multi-turn memory.</p>
+      <span class="feat-tag">M1 · Always On</span>
+    </div>
+
+    <!-- Mock Interview -->
+    <div class="feat-card">
+      <div class="feat-icon">🎤</div>
+      <h3>AI Mock Interviews</h3>
+      <p>Practice HR and technical interviews via text or voice. Get scored on communication, confidence, and accuracy — with a detailed feedback report.</p>
+      <span class="feat-tag">M2 · Role-Specific</span>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="feat-card">
+      <div class="feat-icon">🗺️</div>
+      <h3>Personalised Roadmap</h3>
+      <p>Structured 0–3, 3–6, and 6–12 month learning plans. Curated free and paid courses, certifications, and projects with milestone tracking.</p>
+      <div class="roadmap-preview">
+        <div class="roadmap-horizon"><span class="horizon-badge h1">0–3 mo</span><span>Core skills + portfolio project</span></div>
+        <div class="roadmap-horizon"><span class="horizon-badge h2">3–6 mo</span><span>Certifications + mock interviews</span></div>
+        <div class="roadmap-horizon"><span class="horizon-badge h3">6–12 mo</span><span>Advanced roles + networking</span></div>
+      </div>
+      <span class="feat-tag">M2 · 3 Horizons</span>
+    </div>
+
+    <!-- Jobs -->
+    <div class="feat-card">
+      <div class="feat-icon">💼</div>
+      <h3>Opportunity Discovery</h3>
+      <p>Jobs and internships aggregated from Internshala, LinkedIn, Naukri, Unstop, and more — filtered and ranked for your profile.</p>
+      <span class="feat-tag">M2 · Live Aggregation</span>
+    </div>
+
+    <!-- Schemes -->
+    <div class="feat-card">
+      <div class="feat-icon">🏛️</div>
+      <h3>Govt Schemes Finder</h3>
+      <p>Get matched to eligible central and state-level scholarships and schemes based on your age, education, location, and income bracket.</p>
+      <span class="feat-tag">M3 · Free Resources</span>
+    </div>
+
+    <!-- GPS Score (wide) -->
+    <div class="feat-card wide">
+      <div class="feat-icon">🧭</div>
+      <h3>Career GPS Score</h3>
+      <p>A unified career readiness score (0–100) that updates after every platform interaction. See your "Next Best Action", track progress over time, and earn milestones as you grow. One number that tells you exactly where you stand and what to do next.</p>
+      <span class="feat-tag">M3 · Gamified</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="journey reveal" id="journey">
+  <div class="section-eyebrow">User Journey</div>
+  <h2 class="section-title">From sign-up to<br/><span class="grad">job offer</span></h2>
+  <div class="journey-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Build Your Profile</h4>
+      <p>Share your education, skills, goals, and target role in a guided onboarding flow.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Analyse Your Resume</h4>
+      <p>Get your ATS score, keyword gaps, and a prioritised improvement report instantly.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>Get Your Roadmap</h4>
+      <p>Receive a personalised short, medium, and long-term learning plan curated for you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>Practice & Prepare</h4>
+      <p>Run AI mock interviews and iterate on your skills until you're interview-ready.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <h4>Apply & Land</h4>
+      <p>Discover filtered opportunities and apply directly. Your GPS score tracks every gain.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DELIVERY ROADMAP ── -->
+<section class="milestones reveal" id="milestones">
+  <div class="section-eyebrow">Delivery Roadmap</div>
+  <h2 class="section-title">Built in four <span class="grad">milestones</span></h2>
+  <div class="milestones-grid">
+    <div class="milestone-card">
+      <div class="milestone-num">M1</div>
+      <div class="milestone-period">Months 1 – 3 · Foundation</div>
+      <h4>Core Platform</h4>
+      <ul class="milestone-items">
+        <li>User auth &amp; profile onboarding</li>
+        <li>Resume upload &amp; ATS analyser</li>
+        <li>Career readiness assessment</li>
+        <li>Profile-aware AI chatbot</li>
+        <li>Admin dashboard</li>
+      </ul>
+    </div>
+    <div class="milestone-card">
+      <div class="milestone-num">M2</div>
+      <div class="milestone-period">Months 4 – 6 · Core Features</div>
+      <h4>Growth Tools</h4>
+      <ul class="milestone-items">
+        <li>Employability &amp; job match scores</li>
+        <li>Personalised learning roadmap</li>
+        <li>AI mock interview engine</li>
+        <li>Job &amp; internship discovery APIs</li>
+        <li>Course platform integrations</li>
+      </ul>
+    </div>
+    <div class="milestone-card">
+      <div class="milestone-num">M3</div>
+      <div class="milestone-period">Months 7 – 9 · Enrichment</div>
+      <h4>Opportunities &amp; GPS</h4>
+      <ul class="milestone-items">
+        <li>Government schemes finder</li>
+        <li>Career GPS score &amp; Next Best Action</li>
+        <li>Progress tracking &amp; gamification</li>
+        <li>Multilingual support (Hindi + 5 languages)</li>
+      </ul>
+    </div>
+    <div class="milestone-card">
+      <div class="milestone-num">M4</div>
+      <div class="milestone-period">Months 10 – 12 · Scale</div>
+      <h4>Mobile &amp; Growth</h4>
+      <ul class="milestone-items">
+        <li>Advanced custom ML models</li>
+        <li>Mobile app (iOS &amp; Android)</li>
+        <li>Enterprise &amp; college partnerships</li>
+        <li>Analytics &amp; reporting dashboard</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── METRICS ── -->
+<section class="metrics reveal" id="metrics">
+  <div class="metrics-left">
+    <div class="section-eyebrow">Success Metrics</div>
+    <h2 class="section-title">Built around<br/><span class="grad">real outcomes</span></h2>
+    <div class="metrics-list">
+      <div class="metric-row">
+        <div class="metric-icon">🎯</div>
+        <div class="metric-text">
+          <strong>40%</strong>
+          <span>of users land a job or internship within 6 months</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-icon">📈</div>
+        <div class="metric-text">
+          <strong>+25%</strong>
+          <span>average improvement in mock interview scores per user</span>
+        </div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-icon">✅</div>
+        <div class="metric-text">
+          <strong>≥ 70</strong>
+          <span>average ATS score achieved post-improvement</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="metrics-right">
+    <div class="m-card">
+      <div class="big">8×</div>
+      <div class="label">Average sessions per user per month</div>
+    </div>
+    <div class="m-card">
+      <div class="big">55%</div>
+      <div class="label">30-day user retention rate</div>
+    </div>
+    <div class="m-card">
+      <div class="big">60%</div>
+      <div class="label">Eligible users discovering govt schemes</div>
+    </div>
+    <div class="m-card">
+      <div class="big">45+</div>
+      <div class="label">Net Promoter Score target</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing reveal" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <h2 class="section-title" style="margin-left: auto; margin-right: auto; text-align: center; max-width: 500px;">Plans for every <span class="grad">career stage</span></h2>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-name">Free</div>
+      <div class="pricing-desc">Get started with the essentials — no card required.</div>
+      <div class="pricing-price">₹0</div>
+      <div class="pricing-period">forever</div>
+      <ul class="pricing-features">
+        <li>Resume upload &amp; ATS score</li>
+        <li>Career readiness assessment</li>
+        <li>Basic AI chatbot</li>
+        <li class="off">Personalised learning roadmap</li>
+        <li class="off">AI mock interviews</li>
+        <li class="off">Government schemes finder</li>
+        <li class="off">Career GPS score</li>
+      </ul>
+      <button class="pricing-cta ghost" onclick="document.getElementById('signup-modal').style.display='flex'">Start Free</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-name">Pro</div>
+      <div class="pricing-desc">Everything you need to go from skill gap to job offer.</div>
+      <div class="pricing-price">₹499</div>
+      <div class="pricing-period">per month, cancel anytime</div>
+      <ul class="pricing-features">
+        <li>Everything in Free</li>
+        <li>Personalised 3-horizon roadmap</li>
+        <li>Unlimited AI mock interviews</li>
+        <li>Job &amp; internship discovery</li>
+        <li>Government schemes finder</li>
+        <li>Career GPS score &amp; Next Best Action</li>
+        <li>Priority AI chatbot responses</li>
+      </ul>
+      <button class="pricing-cta primary" onclick="document.getElementById('signup-modal').style.display='flex'">Get Pro →</button>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-name">Campus / Enterprise</div>
+      <div class="pricing-desc">For colleges, TPO teams, and placement cells at scale.</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-period">volume pricing available</div>
+      <ul class="pricing-features">
+        <li>Everything in Pro</li>
+        <li>Bulk student onboarding</li>
+        <li>Placement analytics dashboard</li>
+        <li>College branding &amp; custom domain</li>
+        <li>Dedicated account manager</li>
+        <li>API access &amp; SLA guarantee</li>
+      </ul>
+      <button class="pricing-cta ghost" onclick="document.getElementById('contact-modal').style.display='flex'">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-section reveal">
+  <h2>Start your career journey today.</h2>
+  <p>Join thousands of students and graduates building smarter careers with UPSKILL.</p>
+  <div class="cta-actions">
+    <button class="btn-primary" onclick="document.getElementById('signup-modal').style.display='flex'">Analyse My Resume Free →</button>
+    <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Explore Features</button>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2026 UPSKILL Career Intelligence Platform · v1.0 · DPDP Act 2023 Compliant</p>
+  <div class="footer-links">
+    <a href="#" onclick="document.getElementById('privacy-modal').style.display='flex'; return false;">Privacy Policy</a>
+    <a href="#" onclick="document.getElementById('terms-modal').style.display='flex'; return false;">Terms of Use</a>
+    <a href="#" onclick="document.getElementById('contact-modal').style.display='flex'; return false;">Contact</a>
+    <a href="#" onclick="document.getElementById('dpdp-modal').style.display='flex'; return false;">DPDP Compliance</a>
+  </div>
+</footer>
+
+<!-- ── MODALS ── -->
+<style>
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px; max-width: 440px; width: 100%;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--slate);
+    font-size: 20px; cursor: pointer; line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+  .modal h3 {
+    font-family: 'Syne', sans-serif; font-size: 22px;
+    font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px;
+  }
+  .modal p { color: var(--slate); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+  .modal-input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; color: var(--white);
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    margin-bottom: 14px; outline: none; transition: border-color 0.2s;
+  }
+  .modal-input:focus { border-color: var(--indigo); }
+  .modal-input::placeholder { color: var(--slate); }
+  .modal-submit {
+    width: 100%; background: var(--indigo); color: var(--white);
+    border: none; padding: 14px; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s; margin-top: 4px;
+  }
+  .modal-submit:hover { background: var(--indigo-light); }
+  .modal-note { font-size: 11px; color: var(--slate); margin-top: 12px; text-align: center; margin-bottom: 0; }
+  .modal-info p { margin-bottom: 12px; }
+  .modal-info p:last-child { margin-bottom: 0; }
+</style>
+
+<!-- Sign Up Modal -->
+<div class="modal-overlay" id="signup-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signup-modal').style.display='none'">✕</button>
+    <h3>Get Started Free</h3>
+    <p>Create your account and analyse your first resume in under 2 minutes.</p>
+    <input class="modal-input" id="signup-name" type="text" placeholder="Full name" required />
+    <input class="modal-input" id="signup-email" type="email" placeholder="Email address" required />
+    <input class="modal-input" id="signup-password" type="password" placeholder="Create password" required minlength="8" />
+    <p id="signup-error" style="color:#ff6b6b; font-size:12px; margin-bottom:10px; display:none;"></p>
+    <button class="modal-submit" onclick="handleSignup()">Create Account →</button>
+    <p class="modal-note">By signing up you agree to our Terms of Use and Privacy Policy. Your data is never sold.</p>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="login-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('login-modal').style.display='none'">✕</button>
+    <h3>Welcome Back</h3>
+    <p>Log in to access your resume, roadmap, and AI mentor.</p>
+    <input class="modal-input" id="login-email" type="email" placeholder="Email address" required />
+    <input class="modal-input" id="login-password" type="password" placeholder="Password" required />
+    <p id="login-error" style="color:#ff6b6b; font-size:12px; margin-bottom:10px; display:none;"></p>
+    <button class="modal-submit" id="login-submit-btn" onclick="handleLogin()">Log In →</button>
+    <p class="modal-note">Don't have an account? <a href="#" style="color:var(--cyan);" onclick="document.getElementById('login-modal').style.display='none'; document.getElementById('signup-modal').style.display='flex'; return false;">Sign up</a></p>
+  </div>
+</div>
+
+<!-- Demo Modal -->
+<div class="modal-overlay" id="demo-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('demo-modal').style.display='none'">✕</button>
+    <h3>Watch the Demo</h3>
+    <p>See how UPSKILL analyses a resume, generates a roadmap, and runs a mock interview — all in under 3 minutes.</p>
+    <div style="background: rgba(91,79,255,0.1); border: 1px solid rgba(91,79,255,0.25); border-radius: 12px; padding: 40px; text-align: center; margin-bottom: 24px;">
+      <div style="font-size: 48px; margin-bottom: 12px;">▶</div>
+      <p style="color: var(--slate); font-size: 13px; margin: 0;">Demo video coming soon</p>
+    </div>
+    <button class="modal-submit" onclick="document.getElementById('demo-modal').style.display='none'; document.getElementById('signup-modal').style.display='flex'">Try It Yourself →</button>
+  </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal-overlay" id="contact-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('contact-modal').style.display='none'">✕</button>
+    <h3>Contact Us</h3>
+    <p>Get in touch for enterprise pricing, partnerships, or general enquiries.</p>
+    <input class="modal-input" id="contact-name" type="text" placeholder="Your name" required />
+    <input class="modal-input" id="contact-email" type="email" placeholder="Work email" required />
+    <input class="modal-input" id="contact-org" type="text" placeholder="Organisation / college" />
+    <textarea class="modal-input" id="contact-message" rows="3" placeholder="How can we help?" style="resize: vertical;" required></textarea>
+    <p id="contact-error" style="color:#ff6b6b; font-size:12px; margin-bottom:10px; display:none;"></p>
+    <button class="modal-submit" onclick="handleContact()">Send Message →</button>
+  </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal-overlay" id="privacy-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal modal-info">
+    <button class="modal-close" onclick="document.getElementById('privacy-modal').style.display='none'">✕</button>
+    <h3>Privacy Policy</h3>
+    <p>UPSKILL collects only the data needed to provide personalised career guidance. All data is stored encrypted using AES-256 at rest and TLS 1.3 in transit.</p>
+    <p>You may export or delete your data at any time (right to erasure). Resume files are retained for a maximum of 12 months unless deleted earlier.</p>
+    <p>We never sell your personal data to third parties. Anonymised, aggregated data may be used to improve our AI models.</p>
+    <p>UPSKILL is fully compliant with India's <strong>DPDP Act 2023</strong> and is GDPR-ready. Explicit consent is obtained before any data processing.</p>
+    <p style="margin-top: 16px; font-size: 12px; color: var(--slate);">Full legal document available on request. Last updated: June 2026.</p>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal-overlay" id="terms-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal modal-info">
+    <button class="modal-close" onclick="document.getElementById('terms-modal').style.display='none'">✕</button>
+    <h3>Terms of Use</h3>
+    <p>UPSKILL grants you a limited, non-transferable licence to use the platform for personal career development purposes.</p>
+    <p>You may not reverse-engineer, resell, or use automated tools to scrape the platform. AI-generated content is provided for guidance only and does not constitute professional career or legal advice.</p>
+    <p>We reserve the right to suspend accounts that violate these terms. UPSKILL v1.0 is a pre-launch product — features and pricing may change before general availability.</p>
+    <p style="margin-top: 16px; font-size: 12px; color: var(--slate);">Full legal document available on request. Last updated: June 2026.</p>
+  </div>
+</div>
+
+<!-- DPDP Modal -->
+<div class="modal-overlay" id="dpdp-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal modal-info">
+    <button class="modal-close" onclick="document.getElementById('dpdp-modal').style.display='none'">✕</button>
+    <h3>DPDP Act 2023 Compliance</h3>
+    <p>UPSKILL is designed to be compliant with the <strong>Digital Personal Data Protection Act 2023</strong> (India) from day one.</p>
+    <p>We obtain explicit, informed consent before processing any personal data. Users have the right to access, correct, and erase their data at any time.</p>
+    <p>Data is never transferred outside India without adequate safeguards. A Data Protection Officer (DPO) will be appointed before general availability.</p>
+    <p>For data-related queries or to exercise your rights, contact: <strong>privacy@upskill.in</strong></p>
+    <p style="margin-top: 16px; font-size: 12px; color: var(--slate);">Last reviewed: June 2026.</p>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--navy-card); border: 1px solid rgba(0,229,200,0.3);
+  border-radius: 10px; padding: 14px 24px; font-size: 14px; color: var(--white);
+  z-index: 300; transition: transform 0.4s ease, opacity 0.4s ease; opacity: 0;
+  pointer-events: none; white-space: nowrap;
+">✓ You're on the waitlist! We'll be in touch.</div>
+
+<script src="/auth.js"></script>
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // GPS counter animation — starts at 867.08 (hidden), animates to target
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const el = document.getElementById('gpsNum');
+      const arc = document.getElementById('gpsArc');
+      const target = 82;
+      const fullCirc = 867.08;
+      arc.style.strokeDashoffset = (fullCirc * (1 - target / 100)).toFixed(2);
+      const duration = 2000;
+      const start = Date.now();
+      const tick = setInterval(() => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(ease * target);
+        if (progress >= 1) { el.textContent = target; clearInterval(tick); }
+      }, 16);
+    }, 400);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Toast helper
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    t.style.opacity = '1';
+    setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(80px)'; t.style.opacity = '0'; }, 3500);
+  }
+
+  // Email validation helper
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // Form handlers
+  async function handleSignup() {
+    const name = document.getElementById('signup-name');
+    const email = document.getElementById('signup-email');
+    const password = document.getElementById('signup-password');
+    const error = document.getElementById('signup-error');
+
+    if (!name.value.trim() || !email.value.trim() || !password.value.trim()) {
+      error.textContent = 'Please fill in all fields.';
+      error.style.display = 'block';
+      return;
+    }
+    if (!isValidEmail(email.value.trim())) {
+      error.textContent = 'Please enter a valid email address.';
+      error.style.display = 'block';
+      return;
+    }
+    if (password.value.length < 8) {
+      error.textContent = 'Password must be at least 8 characters.';
+      error.style.display = 'block';
+      return;
+    }
+
+    error.style.display = 'none';
+
+    try {
+      await Auth.signup({
+        name: name.value.trim(),
+        email: email.value.trim(),
+        password: password.value,
+      });
+
+      document.getElementById('signup-modal').style.display = 'none';
+      showToast('✓ Account created! Redirecting to your dashboard...');
+
+      name.value = ''; email.value = ''; password.value = '';
+
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 1200);
+    } catch (err) {
+      error.textContent = err.message || 'Something went wrong. Please try again.';
+      error.style.display = 'block';
+    }
+  }
+
+  async function handleLogin() {
+    const email = document.getElementById('login-email');
+    const password = document.getElementById('login-password');
+    const error = document.getElementById('login-error');
+
+    if (!email.value.trim() || !password.value.trim()) {
+      error.textContent = 'Please enter your email and password.';
+      error.style.display = 'block';
+      return;
+    }
+    if (!isValidEmail(email.value.trim())) {
+      error.textContent = 'Please enter a valid email address.';
+      error.style.display = 'block';
+      return;
+    }
+
+    error.style.display = 'none';
+
+    try {
+      await Auth.login({ email: email.value.trim(), password: password.value });
+
+      document.getElementById('login-modal').style.display = 'none';
+      showToast('✓ Logged in! Redirecting to your dashboard...');
+
+      email.value = ''; password.value = '';
+
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
+    } catch (err) {
+      error.textContent = err.message || 'Invalid email or password.';
+      error.style.display = 'block';
+    }
+  }
+
+  // On page load: if already logged in, swap "Get Started Free" / "Log In"
+  // for a "Go to Dashboard" link instead of forcing login again.
+  function updateNavForSession() {
+    if (Auth.isLoggedIn()) {
+      const loginLink = document.getElementById('nav-login-link');
+      const dashLink = document.getElementById('nav-dashboard-link');
+      const ctaBtn = document.getElementById('nav-cta-btn');
+      if (loginLink) loginLink.style.display = 'none';
+      if (dashLink) dashLink.style.display = 'inline';
+      if (ctaBtn) {
+        ctaBtn.textContent = 'Go to Dashboard';
+        ctaBtn.onclick = () => { window.location.href = '/dashboard.html'; };
+      }
+    }
+  }
+  window.addEventListener('load', updateNavForSession);
+
+  // Show a message if redirected here due to an expired session
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('session') === 'expired') {
+      showToast('Your session expired. Please log in again.');
+    }
+  });
+
+
+  function handleContact() {
+    const name = document.getElementById('contact-name');
+    const email = document.getElementById('contact-email');
+    const org = document.getElementById('contact-org');
+    const message = document.getElementById('contact-message');
+    const error = document.getElementById('contact-error');
+
+    if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
+      error.textContent = 'Please fill in your name, email, and message.';
+      error.style.display = 'block';
+      return;
+    }
+    if (!isValidEmail(email.value.trim())) {
+      error.textContent = 'Please enter a valid email address.';
+      error.style.display = 'block';
+      return;
+    }
+
+    error.style.display = 'none';
+    document.getElementById('contact-modal').style.display = 'none';
+    showToast('✓ Message sent! We\'ll reply within 24 hours.');
+
+    // Reset form for next use
+    name.value = ''; email.value = ''; org.value = ''; message.value = '';
+  }
+
+  // Close modals on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+  });
+</script>
+</body>
+</html>

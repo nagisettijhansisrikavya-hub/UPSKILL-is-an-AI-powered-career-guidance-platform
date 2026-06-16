@@ -1,0 +1,2 @@
+{"$$indexCreated":{"fieldName":"userId","unique":false,"sparse":false}}
+{"_id":"9dccd7bc-519f-490f-9f7e-82d59437ebf3","userId":"1286059f-5a85-439e-8cc9-d9aa1fbc3608","role":"Frontend Developer","questions":[{"question":"Tell me about yourself.","answer":"","feedback":"","score":0}],"overallScore":77,"createdAt":"2026-06-16T07:44:13.625Z"}
